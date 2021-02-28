@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
-
+//фрагмент для детального отображения преступления
 class CrimeFragment : Fragment() {
     private lateinit var crime : Crime
     private lateinit var titleField : EditText
@@ -43,7 +43,7 @@ class CrimeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
+        //слежение за текстом для тайтла
         val titleWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
@@ -58,7 +58,7 @@ class CrimeFragment : Fragment() {
             }
         }
         titleField.addTextChangedListener(titleWatcher)
-
+        //слежение за чек боксом решения проблемы
         solvedCheckBox.apply {
             setOnCheckedChangeListener {
                 _, isChecked -> crime.isSolved = isChecked
