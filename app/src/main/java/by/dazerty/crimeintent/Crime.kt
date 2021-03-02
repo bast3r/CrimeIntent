@@ -11,3 +11,4 @@ data class Crime (@PrimaryKey val id : UUID = UUID.randomUUID(),
                   var isSolved : Boolean = false,
                   var requiresPolice : Boolean = false
 )
+
