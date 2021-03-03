@@ -18,7 +18,7 @@ class CrimeRepository private constructor(context: Context){
     ).build()
 
     private val crimeDao = database.crimeDao()
-    private val executor = Executors.newSingleThreadExecutor()
+    private val executor = Executors.newSingleThreadExecutor() //отдельный тред для работы с обновлением БД
 
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
     fun getCrime(id: UUID): LiveData<Crime?> = crimeDao.getCrime(id)

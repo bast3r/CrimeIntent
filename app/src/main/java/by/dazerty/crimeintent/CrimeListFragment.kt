@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,35 +22,44 @@ class CrimeListFragment : Fragment() {
     interface Callbacks {
         fun onCrimeSelected(crimeId: UUID)
     }
-
+    //текущие коллбеки
     private var callbacks : Callbacks? = null
+    //лист криминалов
     private lateinit var crimeRecyclerView : RecyclerView
-    private var adapter : CrimeAdapter? = CrimeAdapter(emptyList())
+    //адаптер для генерации элеменов
+    private var adapter : CrimeAdapter? = CrimeAdapter(/*emptyList()*/)
 
     //лист модель
     private val crimeListViewModel : CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
     }
 
+    //показать другой фрагмент и привязать его колбеки
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
 
+    //отвязать фрагмент и колбеки
     override fun onDetach() {
         super.onDetach()
         callbacks = null
     }
 
+    //после создания и отображения листа начинаем следить за изменениеями в модели
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        crimeRecyclerView.adapter = adapter
 
         crimeListViewModel.crimeListLiveData.observe(
             viewLifecycleOwner,
             Observer {crimes ->
                 crimes?.let {
                     Log.i(TAG, "Got crimes ${crimes.size}")
-                    updateUI(crimes)
+//                    updateUI(crimes)
+                    //обновляет только нужные элеметы
+                    adapter?.submitList(it)
                 }
             }
         )
@@ -69,6 +77,7 @@ class CrimeListFragment : Fragment() {
             itemView.setOnClickListener(this)
         }
 
+        //привязка данных к вью
         fun bind(crime: Crime) {
             this.crime = crime
             titleTextView.text = crime.title
@@ -98,7 +107,8 @@ class CrimeListFragment : Fragment() {
         }
     }
     //переходник для генерации нужного холдера для ресайклера
-    private inner class CrimeAdapter(var crimes : List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {//androidx.recyclerview.widget.ListAdapter<Crime, CrimeHolder>(CrimeDiffCallback()) {
+    private inner class CrimeAdapter(/*var crimes : List<Crime>*/) : //RecyclerView.Adapter<CrimeHolder>() {
+            androidx.recyclerview.widget.ListAdapter<Crime, CrimeHolder>(CrimeDiffCallback()) {//эффективная перезагрузка списка, только новые изменения
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
             val view = when (viewType) {
                 0 -> layoutInflater.inflate(R.layout.list_item_crime, parent, false)
@@ -111,25 +121,24 @@ class CrimeListFragment : Fragment() {
                 return CrimeWithPoliceHolder(view)
             }
         }
-        //кол во элементов в списке
-        override fun getItemCount() = crimes.size
+        //кол во элементов в списке, в лист адаптере не нужен
+//        override fun getItemCount() = crimes.size
         //тип элемента
         override fun getItemViewType(position: Int): Int {
-            if (crimes[position].requiresPolice) {
+            if (getItem(position).requiresPolice) {
                 return 1;
             }
             return 0
         }
         //навешние данных из модели
         override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
-            val crime = crimes[position]
+            val crime = getItem(position)//crimes[position]
 //            holder.apply {
 //                titleTextView.text = crime.title
 //                dateTextView.text = crime.date.toString()
 //            }
             holder.bind(crime)
         }
-
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -154,8 +163,8 @@ class CrimeListFragment : Fragment() {
     //привязываение адаптера и ресайклера
     private fun updateUI(crimes: List<Crime>) {
 //        val crimes = crimeListViewModel.crimes
-        adapter = CrimeAdapter(crimes)
-        crimeRecyclerView.adapter = adapter
+//        adapter = CrimeAdapter(crimes)
+//        crimeRecyclerView.adapter = adapter
     }
 
     companion object {
@@ -165,6 +174,7 @@ class CrimeListFragment : Fragment() {
     }
 }
 
+//проверки на изменение элементов
 class CrimeDiffCallback : DiffUtil.ItemCallback<Crime>() {
     override fun areItemsTheSame(oldItem: Crime, newItem: Crime): Boolean {
 //        TODO("Not yet implemented")

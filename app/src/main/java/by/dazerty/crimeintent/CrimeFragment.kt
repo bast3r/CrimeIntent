@@ -12,9 +12,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import java.nio.file.SimpleFileVisitor
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,6 +69,7 @@ class CrimeFragment : Fragment() {
         )
     }
 
+    //обновление экрана детализаци
     private fun updateUI() {
         titleField.setText(crime.title)
 //        dateButton.text = crime.date.toString()
@@ -109,15 +108,17 @@ class CrimeFragment : Fragment() {
         }
     }
 
+    //сохранение изменений преступления при выходе из экрана
     override fun onStop() {
         super.onStop()
         crimeDetailViewModel.saveCrime(crime)
     }
 
+    //создание нового обьекта для показа деталей
     companion object {
         fun newInstance(crimeId : UUID) : CrimeFragment {
             val args = Bundle().apply {
-                putSerializable(ARG_CRIME_ID, crimeId)
+                putSerializable(ARG_CRIME_ID, crimeId) //передача как параметра
             }
             return CrimeFragment().apply {
                 arguments = args
