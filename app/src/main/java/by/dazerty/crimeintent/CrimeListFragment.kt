@@ -1,31 +1,46 @@
 package by.dazerty.crimeintent
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 private const val TAG = "CrimeListFragment"
 
 //фрагмент для списка преступлений
 class CrimeListFragment : Fragment() {
+    interface Callbacks {
+        fun onCrimeSelected(crimeId: UUID)
+    }
+
+    private var callbacks : Callbacks? = null
     private lateinit var crimeRecyclerView : RecyclerView
     private var adapter : CrimeAdapter? = CrimeAdapter(emptyList())
 
     //лист модель
     private val crimeListViewModel : CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,7 +83,8 @@ class CrimeListFragment : Fragment() {
 
         //кликабл интерфейс для всей панели
         override fun onClick(view : View) {
-            Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "${crime.title} pressed!", Toast.LENGTH_SHORT).show()
+            callbacks?.onCrimeSelected(crime.id)
         }
     }
     //холдер для преступлений, в которых необходим вызов полиции
@@ -82,7 +98,7 @@ class CrimeListFragment : Fragment() {
         }
     }
     //переходник для генерации нужного холдера для ресайклера
-    private inner class CrimeAdapter(var crimes : List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {
+    private inner class CrimeAdapter(var crimes : List<Crime>) : RecyclerView.Adapter<CrimeHolder>() {//androidx.recyclerview.widget.ListAdapter<Crime, CrimeHolder>(CrimeDiffCallback()) {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CrimeHolder {
             val view = when (viewType) {
                 0 -> layoutInflater.inflate(R.layout.list_item_crime, parent, false)
@@ -113,6 +129,7 @@ class CrimeListFragment : Fragment() {
 //            }
             holder.bind(crime)
         }
+
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,5 +163,16 @@ class CrimeListFragment : Fragment() {
             return CrimeListFragment()
         }
     }
+}
 
+class CrimeDiffCallback : DiffUtil.ItemCallback<Crime>() {
+    override fun areItemsTheSame(oldItem: Crime, newItem: Crime): Boolean {
+//        TODO("Not yet implemented")
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Crime, newItem: Crime): Boolean {
+//        TODO("Not yet implemented")
+        return oldItem == newItem
+    }
 }
