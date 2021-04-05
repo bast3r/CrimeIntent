@@ -29,7 +29,6 @@
         android:id="@+id/crime_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         tools:text="28.02.2021" />
 
     <CheckBox
