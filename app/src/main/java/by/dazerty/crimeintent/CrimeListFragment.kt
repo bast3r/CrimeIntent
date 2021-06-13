@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
 import java.util.*
 
 private const val TAG = "CrimeListFragment"
@@ -68,6 +69,7 @@ class CrimeListFragment : Fragment() {
     //холдер хранит представление для ячейки ресайклера
     private open inner class CrimeHolder(view : View) : RecyclerView.ViewHolder(view), View.OnClickListener {
         private lateinit var crime : Crime
+        var dateFormat = SimpleDateFormat("dd-MM-yyyy")
         //получили контролы
         val titleTextView : TextView = itemView.findViewById(R.id.crime_title)
         val dateTextView : TextView = itemView.findViewById(R.id.crime_date)
@@ -81,7 +83,7 @@ class CrimeListFragment : Fragment() {
         fun bind(crime: Crime) {
             this.crime = crime
             titleTextView.text = crime.title
-            dateTextView.text = crime.date.toString()
+            dateTextView.text = dateFormat.format(crime.date)
 
             imageView.visibility = if (crime.isSolved) {
                 View.VISIBLE
@@ -177,12 +179,10 @@ class CrimeListFragment : Fragment() {
 //проверки на изменение элементов
 class CrimeDiffCallback : DiffUtil.ItemCallback<Crime>() {
     override fun areItemsTheSame(oldItem: Crime, newItem: Crime): Boolean {
-//        TODO("Not yet implemented")
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: Crime, newItem: Crime): Boolean {
-//        TODO("Not yet implemented")
         return oldItem == newItem
     }
 }

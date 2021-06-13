@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import by.dazerty.crimeintent.Crime
-
+//room db based on sqlite
 @Database(entities = [ Crime::class ], version = 1, exportSchema = false)
 @TypeConverters(CrimeTypeConverters::class)
 abstract class CrimeDatabase : RoomDatabase () {

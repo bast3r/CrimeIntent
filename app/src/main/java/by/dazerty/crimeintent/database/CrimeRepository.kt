@@ -11,15 +11,17 @@ import java.util.concurrent.Executors
 private const val DATABASE_NAME = "crime-database"
 
 class CrimeRepository private constructor(context: Context){
+    //connection to db
     private val database : CrimeDatabase = Room.databaseBuilder(
         context.applicationContext,
         CrimeDatabase::class.java,
         DATABASE_NAME
     ).build()
-
+    //dao
     private val crimeDao = database.crimeDao()
+    //thread for manipulating data
     private val executor = Executors.newSingleThreadExecutor() //отдельный тред для работы с обновлением БД
-
+    //livedata for background changes
     fun getCrimes(): LiveData<List<Crime>> = crimeDao.getCrimes()
     fun getCrime(id: UUID): LiveData<Crime?> = crimeDao.getCrime(id)
 
@@ -30,6 +32,7 @@ class CrimeRepository private constructor(context: Context){
     }
 
     fun addCrime(crime: Crime) {
+        //use extra thread for working db
         executor.execute {
             crimeDao.addCrime(crime)
         }

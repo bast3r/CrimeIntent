@@ -3,7 +3,7 @@ package by.dazerty.crimeintent
 import androidx.lifecycle.ViewModel
 import by.dazerty.crimeintent.database.CrimeRepository
 
-//список преступлений
+//список преступлений viewmodel
 class CrimeListViewModel : ViewModel() {
 
 //    val crimes = mutableListOf<Crime>()

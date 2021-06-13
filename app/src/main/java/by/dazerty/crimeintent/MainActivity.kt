@@ -6,7 +6,7 @@ import android.util.Log
 import java.util.*
 
 private const val TAG = "MainActivity"
-
+//main activity, fragment manamer and callback receiver
 class MainActivity : AppCompatActivity(), CrimeListFragment.Callbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +22,8 @@ class MainActivity : AppCompatActivity(), CrimeListFragment.Callbacks {
                 .commit()
         }
     }
-
+    //chosen crime show in new detail fragment
     override fun onCrimeSelected(crimeId: UUID) {
-//        TODO("Not yet implemented")
         Log.d(TAG, "MainActivity.onCrimeSelected: ${crimeId}")
 
         val fragment = CrimeFragment.newInstance(crimeId)

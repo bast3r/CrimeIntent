@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import by.dazerty.crimeintent.database.CrimeRepository
 import java.util.*
-
+//viewmodel for one crime
 class CrimeDetailViewModel() : ViewModel() {
     private val crimeRepository = CrimeRepository.get()
     private val crimeIdLiveData = MutableLiveData<UUID>()

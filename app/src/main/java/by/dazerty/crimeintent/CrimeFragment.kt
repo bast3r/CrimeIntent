@@ -26,7 +26,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var titleField : EditText
     private lateinit var dateButton : Button
     private lateinit var solvedCheckBox: CheckBox
-
+    //create viewmodel before first use
     private val crimeDetailViewModel : CrimeDetailViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
     }
@@ -35,6 +35,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         super.onCreate(savedInstanceState)
 
         crime = Crime()
+        //read crime id
         val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
         Log.d(TAG, "args ${crimeId}")
         crimeDetailViewModel.loadCrime(crimeId)
@@ -113,7 +114,9 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
 //            DatePickerFragment().apply {
 //                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
 //            }
+            //show datepicker dialog window
             DatePickerFragment.newInstance(crime.date).apply {
+                //установка получателя ответа в будущем
                 setTargetFragment(this@CrimeFragment, REQUEST_DATE)
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
             }
@@ -139,7 +142,6 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     }
 
     override fun onDateSelected(date: Date) {
-//        TODO("Not yet implemented")
         crime.date = date
         updateUI()
     }

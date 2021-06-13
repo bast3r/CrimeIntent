@@ -2,7 +2,7 @@ package by.dazerty.crimeintent.database
 
 import androidx.room.TypeConverter
 import java.util.*
-
+//convertors for data types
 class CrimeTypeConverters {
     @TypeConverter
     fun fromDate(date: Date?): Long? {

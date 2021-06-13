@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import java.util.*
 
 private const val ARG_DATE = "date"
-
+//datepicker dialog fragment
 class DatePickerFragment : DialogFragment() {
 
     interface Callbacks {
@@ -15,6 +15,7 @@ class DatePickerFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        //init start date
         val date = arguments?.getSerializable(ARG_DATE) as Date
         val calendar = Calendar.getInstance()
         calendar.time = date

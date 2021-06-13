@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import by.dazerty.crimeintent.Crime
 import java.util.*
-
+//dao for connecting to db and working with data
 @Dao
 interface CrimeDao {
     @Query("SELECT * FROM crime")
