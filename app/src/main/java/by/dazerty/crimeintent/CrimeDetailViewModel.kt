@@ -21,6 +21,7 @@ class CrimeDetailViewModel() : ViewModel() {
     }
 
     fun saveCrime(crime: Crime) {
+        if (crime.title.isBlank()) return
         crimeRepository.updateCrime(crime)
     }
 }

@@ -16,7 +16,9 @@ class CrimeRepository private constructor(context: Context){
         context.applicationContext,
         CrimeDatabase::class.java,
         DATABASE_NAME
-    ).build()
+    )
+        .addMigrations(migration_1_2)//add new field about suspect
+        .build()
     //dao
     private val crimeDao = database.crimeDao()
     //thread for manipulating data
